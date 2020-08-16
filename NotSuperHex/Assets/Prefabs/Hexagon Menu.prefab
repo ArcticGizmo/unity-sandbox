@@ -80,7 +80,7 @@ PrefabInstance:
     - target: {fileID: 766084740538241636, guid: 82be31b025833d84ca4488dd20591139,
         type: 3}
       propertyPath: endScale
-      value: 1.5
+      value: 1.75
       objectReference: {fileID: 0}
     - target: {fileID: 766084740538241636, guid: 82be31b025833d84ca4488dd20591139,
         type: 3}
