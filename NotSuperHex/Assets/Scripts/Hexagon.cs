@@ -19,7 +19,6 @@ public class Hexagon : MonoBehaviour
   void Start()
   {
     hexColliderTransform = gameObject.transform.GetChild(0);
-    rb.rotation = Random.Range(0f, 360f);
     transform.localScale = Vector3.one * startScale;
     SetLineWidth(initialWidth);
     ScaleCollider(initialWidth, startScale);
