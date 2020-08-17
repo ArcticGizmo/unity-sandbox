@@ -2,22 +2,73 @@
 
 public class PlayerController : MonoBehaviour
 {
-  public Rigidbody rb;
-  public float acceleration = 20f;
-  public float maxSpeed = 200f;
-  private float movement = 0f;
+  public float direction = 0f;
 
-  void Update()
+  private int segments = 8;
+  private float segmentWidth = 0f;
+  private float offset = 22.5f + 90f;
+
+  private void Start()
   {
-    // getting this will be much more complicated because it will depend on the 
-    // direction that you are facing (only for multi directional input, keyboard will just stay confusing I guess)
-    movement = Input.GetAxisRaw("Horizontal");
+    segmentWidth = 360f / (float)segments;
   }
 
-  private void FixedUpdate()
+  private void Update()
   {
-    rb.AddForce(Vector3.right * acceleration * Time.deltaTime * movement, ForceMode.VelocityChange);
-    rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
-    Debug.Log(rb.velocity.magnitude);
+    int segment = GetSegment(transform.eulerAngles.z);
+    direction = GetDirection(segment);
+  }
+
+  private int GetSegment(float rotation)
+  {
+    float effectiveRotation = rotation - offset;
+    if (effectiveRotation < 0)
+    {
+      effectiveRotation += 360f;
+    }
+    return Mathf.Abs(Mathf.CeilToInt(effectiveRotation / segmentWidth) % segments);
+  }
+
+  private float GetDirection(int segment)
+  {
+    float hDirection = 0f;
+    float vDirection = 0f;
+
+    vDirection = Input.GetAxisRaw("Vertical");
+    hDirection = Input.GetAxisRaw("Horizontal");
+
+    // horizontal direction
+    if (segment == 0 || segment == 4)
+    {
+      hDirection = 0f;
+    }
+    else if (segment >= 1 && segment <= 3)
+    {
+      hDirection *= -1f;
+    }
+
+    // vertical direction
+    if (segment == 2 || segment == 6)
+    {
+      vDirection = 0f;
+    }
+    else if (segment >= 3 && segment <= 5)
+    {
+      vDirection *= -1f;
+    }
+
+    return LargetByMagnitude(vDirection, hDirection);
+  }
+
+  private float LargetByMagnitude(float a, float b)
+  {
+    if (Mathf.Abs(a) > Mathf.Abs(b))
+    {
+      return a;
+    }
+    else
+    {
+      return b;
+    }
   }
 }
